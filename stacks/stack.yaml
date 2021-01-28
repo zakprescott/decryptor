@@ -1,0 +1,46 @@
+Resources:
+  EncryptedBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: encrypted
+
+  DecryptedBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: decrypted
+
+  DeployBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: deploy-bucket
+
+  # DecrypterRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Service: *
+  #           Action: *
+
+  DecrypterFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: decrypter
+      Handler: src/decrypter.handler
+      Role: 
+      Code:
+        S3Bucket: deploy-bucket
+        S3Key: decrypter.zip
+
+  KeyTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: decrypter-key-table
+      KeySchema:
+        - AttributeName: hashKey
+          KeyType: HASH
+        - AttributeName: sortKey
+          KeyType: RANGE
