@@ -1,0 +1,29 @@
+{
+  "name": "decryptor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zakprescott/decrypter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zakprescott/decrypter/issues"
+  },
+  "homepage": "https://github.com/zakprescott/decrypter#readme",
+  "devDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.4.1",
+    "@aws-sdk/util-dynamodb": "^3.4.1"
+  },
+  "dependencies": {
+    "sharp": "^0.27.1"
+  }
+}
