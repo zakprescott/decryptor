@@ -1,1 +1,1 @@
-# decrypter
+# decryptor
