@@ -7,7 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --silent --verbose",
+    "test:unit": "jest test/unit/* --silent --verbose",
+    "test:integration": "jest test/integration/* --silent --verbose"
   },
   "repository": {
     "type": "git",
@@ -20,10 +22,11 @@
   },
   "homepage": "https://github.com/zakprescott/decrypter#readme",
   "devDependencies": {
-    "@aws-sdk/client-dynamodb": "^3.4.1",
-    "@aws-sdk/util-dynamodb": "^3.4.1"
-  },
-  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.5.0",
+    "@aws-sdk/client-s3": "^3.5.0",
+    "@aws-sdk/util-dynamodb": "^3.5.0",
+    "aws-sdk": "^2.845.0",
     "sharp": "^0.27.1"
-  }
+  },
+  "dependencies": {}
 }

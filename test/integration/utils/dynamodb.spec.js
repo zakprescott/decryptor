@@ -1,20 +1,36 @@
-const { getItem } = require('../../../src/utils/dynamodb.js');
+const { deleteItem, getItem, putItem } = require('../../../src/utils/dynamodb.js');
+const cipherItem = require('../../resources/cipherItem.json');
 
 describe('dynamodb', () => {
+    cipherItem.hashKey = 'dynamodb-test';
+
+    beforeEach(async () => {
+        await deleteItem(cipherItem.hashKey);
+    });
+
+    afterAll(async () => {
+        await deleteItem(cipherItem.hashKey);
+    });
+
+    describe('deleteItem', () => {
+        it('should delete an Item', async () => {
+            await putItem(cipherItem);
+            await deleteItem(cipherItem.hashKey);
+            expect(await getItem(cipherItem.hashKey)).toBeUndefined();
+        });
+    });
+
     describe('getItem', () => {
-        it('should return the correct Item when given a hashKey', async () => {
-            const hashKey = 'bcdef';
-            const Item = {
-                hashKey: 'bcdef',
-                cipher: {
-                    b: 'a',
-                    c: 'b',
-                    d: 'c',
-                    e: 'd',
-                    f: 'e'
-                }
-            };
-            expect(await getItem(hashKey)).toStrictEqual(Item);
+        it('should get an Item', async () => {
+            await putItem(cipherItem);
+            expect(await getItem(cipherItem.hashKey)).toStrictEqual(cipherItem);
+        });
+    });
+
+    describe('putItem', () => {
+        it('should put an Item', async () => {
+            await putItem(cipherItem);
+            expect(await getItem(cipherItem.hashKey)).toStrictEqual(cipherItem);
         });
     });
 });
