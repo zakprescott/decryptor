@@ -15,6 +15,8 @@ describe('dynamodb', () => {
     describe('deleteItem', () => {
         it('should delete an Item', async () => {
             await putItem(cipherItem);
+            expect(await getItem(cipherItem.hashKey)).toStrictEqual(cipherItem);
+            
             await deleteItem(cipherItem.hashKey);
             expect(await getItem(cipherItem.hashKey)).toBeUndefined();
         });

@@ -22,10 +22,23 @@
 ## Prerequisites
 * AWS Access
 ## Getting Started
+Clone the repo:
 ```bash
-npm i
+git clone git@github.com:zakprescott/decryptor.git
 ```
-
+Install dependencies:
+```bash
+npm install
+```
+Package the source code:
+```bash
+npm run package
+```
+Deploy the stack:
+```bash
+npm run deploy
+```
+Test to verify everything works:
 ```bash
 npm test
 ```

@@ -1,0 +1,143 @@
+Parameters:
+  CipherTableName:
+    Type: String
+    Default: decryptor-cipher-table
+    Description: Name of the DynamoDB table that will store the ciphers used to decrypt encrypted data
+
+  DecryptedBucketName:
+    Type: String
+    Default: decryptor-decrypted-files
+    Description: Name of the S3 bucket that decrypted files will be uploaded to
+
+  DecryptorFunctionName:
+    Type: String
+    Default: decryptor
+    Description: Name of the Lambda function that will decrypt encrypted data
+
+  DecryptorFunctionPolicyName:
+    Type: String
+    Default: DecryptorFunctionPolicy
+    Description: IAM policy to allow decryptor function to read from encrypted bucket, get Items from Cipher table, and put Objects in decrypted bucket
+
+  DecryptorFunctionRoleName:
+    Type: String
+    Default: decryptor-function-role
+    Description: Name of the IAM role for the decryptor Lambda function
+
+  DeployBucketName:
+    Type: String
+    Default: decryptor-deploy-bucket
+    Description: Name of the S3 bucket where source code for the decryptor Lambda function will be uploaded
+
+  EncryptedBucketName:
+    Type: String
+    Default: decryptor-encrypted-files
+    Description: Name of the S3 bucket that encrypted files will be uploaded to
+
+  NodeJSRuntime:
+    Type: String
+    Default: nodejs14.x
+    Description: Node.JS runtime used for Lambda function
+
+  ReadCapacityUnits:
+    Type: Number
+    Default: 2
+    Description: Provisioned throughput read capacity units for DynamoDB table
+
+  SourceAccount:
+    Type: Number
+    Default: 642744795524
+    Description: User's AWS account number
+
+  WriteCapacityUnits:
+    Type: Number
+    Default: 2
+    Description: Provisioned throughput write capacity units for DynamoDB table
+
+Resources:
+  CipherTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref CipherTableName
+      KeySchema:
+        - AttributeName: hashKey
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: hashKey
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref ReadCapacityUnits
+        WriteCapacityUnits: !Ref WriteCapacityUnits
+
+  DecryptedBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DecryptedBucketName
+
+  DecryptorFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref DecryptorFunctionName
+      Runtime: !Ref NodeJSRuntime
+      Handler: src/index.handler
+      Role: !GetAtt DecryptorFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref DeployBucketName
+        S3Key: !Sub code/${DecryptorFunctionName}.zip
+
+  DecryptorFunctionPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Ref DecryptorFunctionPolicyName
+      Roles:
+        - !Ref DecryptorFunctionRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'logs:PutLogEvents'
+              - 'logs:CreateLogGroup'
+              - 'logs:CreateLogStream'
+            Resource: !Sub 'arn:aws:logs:*:${SourceAccount}:*'
+          - Effect: Allow
+            Action: 's3:GetObject'
+            Resource: !Sub '${EncryptedBucket.Arn}/*'
+          - Effect: Allow
+            Action: 's3:PutObject'
+            Resource: !Sub '${DecryptedBucket.Arn}/*'
+          - Effect: Allow
+            Action: 'dynamodb:GetItem'
+            Resource: !GetAtt CipherTable.Arn
+
+  DecryptorFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref DecryptorFunctionRoleName
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+
+  EncryptedBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref EncryptedBucketName
+      # NotificationConfiguration:
+      #   LambdaConfigurations:
+      #     - Event: s3:ObjectCreated:Put
+      #       Function: !GetAtt DecryptorFunction.Arn
+
+  S3InvokeDecryptorFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt DecryptorFunction.Arn
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt EncryptedBucket.Arn
+      SourceAccount: !Ref SourceAccount

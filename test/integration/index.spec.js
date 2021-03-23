@@ -15,11 +15,11 @@ describe('handler', () => {
         await putItem(cipherItem);
     });
 
-    afterAll(async () => {
-        await deleteItem(cipherItem.hashKey);
-        await deleteObject(ENCRYPTED_BUCKET, Key);
-        await deleteObject(DECRYPTED_BUCKET, Key);
-    });
+    // afterAll(async () => {
+    //     await deleteItem(cipherItem.hashKey);
+    //     await deleteObject(ENCRYPTED_BUCKET, Key);
+    //     await deleteObject(DECRYPTED_BUCKET, Key);
+    // });
 
     it('should decrypt the file referenced in S3 event and store the decrypted file in S3', async () => {
         await putObject(JSON.stringify(encryptedBody), ENCRYPTED_BUCKET, Key);

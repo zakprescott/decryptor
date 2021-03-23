@@ -8,13 +8,13 @@ const {
 
 describe('config', () => {
     it.each`
-        configName            | configValue         | expectedValue
+        configVariable        | configValue         | expectedValue
         ${'DECRYPTED_BUCKET'} | ${DECRYPTED_BUCKET} | ${'decryptor-decrypted-files'}
         ${'ENCRYPTED_BUCKET'} | ${ENCRYPTED_BUCKET} | ${'decryptor-encrypted-files'}
         ${'REGION'}           | ${REGION}           | ${'us-east-1'}
-        ${'TABLE_NAME'}       | ${TABLE_NAME}       | ${'decryptor-key-table'}
+        ${'TABLE_NAME'}       | ${TABLE_NAME}       | ${'decryptor-cipher-table'}
         ${'TEST_BUCKET'}      | ${TEST_BUCKET}      | ${'decryptor-test-bucket'}
-    `('should return $expectedValue for $configName', ({ configValue, expectedValue }) => {
+    `('should return $expectedValue for $configVariable', ({ configValue, expectedValue }) => {
         expect(configValue).toEqual(expectedValue);
     });
 });

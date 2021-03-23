@@ -9,19 +9,24 @@
   "scripts": {
     "test": "jest --silent --verbose",
     "test:unit": "jest test/unit/* --silent --verbose",
-    "test:integration": "jest test/integration/* --silent --verbose"
+    "test:integration": "jest test/integration/* --silent --verbose",
+    "deploy": "sh scripts/deploy.sh",
+    "delete-stack": "sh scripts/delete-stack.sh",
+    "update-stack": "sh scripts/update-stack.sh",
+    "package": "sh scripts/package.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zakprescott/decrypter.git"
+    "url": "git+https://github.com/zakprescott/decryptor.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zakprescott/decrypter/issues"
+    "url": "https://github.com/zakprescott/decryptor/issues"
   },
-  "homepage": "https://github.com/zakprescott/decrypter#readme",
+  "homepage": "https://github.com/zakprescott/decryptor#readme",
   "devDependencies": {
+    "@aws-sdk/client-cloudformation": "^3.7.0",
     "@aws-sdk/client-dynamodb": "^3.5.0",
     "@aws-sdk/client-s3": "^3.5.0",
     "@aws-sdk/util-dynamodb": "^3.5.0",

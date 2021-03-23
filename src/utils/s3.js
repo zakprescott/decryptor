@@ -29,7 +29,7 @@ const getObject = async (Bucket, Key) => {
         const data = await readableToString(Readable.from(Body));
         return data;
     } catch (error) {
-        console.log(`Error getting object: ${Bucket}/${Key}`);
+        console.log(`Error getting object ${Bucket}/${Key}: ${error}`);
     }
 };
 
@@ -52,8 +52,7 @@ const putObject = async (Body, Bucket, Key) => {
     try {
         await client.send(command);
     } catch (error) {
-        console.log(`Error putting object: ${Bucket}/${Key}`);
-        console.log(error);
+        console.log(`Error putting object ${Bucket}/${Key}: ${error}`);
     }
 };
 
