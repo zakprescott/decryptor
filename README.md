@@ -30,6 +30,10 @@ Install dependencies:
 ```bash
 npm install
 ```
+Set [AWS_PROFILE](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) environment variable:
+```bash
+export AWS_PROFILE=YOUR_PROFILE
+```
 Package the source code:
 ```bash
 npm run package
