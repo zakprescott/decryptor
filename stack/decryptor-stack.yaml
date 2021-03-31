@@ -46,7 +46,6 @@ Parameters:
 
   SourceAccount:
     Type: Number
-    Default: 642744795524
     Description: User's AWS account number
 
   WriteCapacityUnits:
@@ -64,7 +63,7 @@ Resources:
           KeyType: HASH
       AttributeDefinitions:
         - AttributeName: hashKey
-          AttributeType: S
+          AttributeType: N
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
@@ -96,18 +95,18 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-              - 'logs:PutLogEvents'
-              - 'logs:CreateLogGroup'
-              - 'logs:CreateLogStream'
-            Resource: !Sub 'arn:aws:logs:*:${SourceAccount}:*'
+              - "logs:PutLogEvents"
+              - "logs:CreateLogGroup"
+              - "logs:CreateLogStream"
+            Resource: !Sub "arn:aws:logs:*:${SourceAccount}:*"
           - Effect: Allow
-            Action: 's3:GetObject'
-            Resource: !Sub '${EncryptedBucket.Arn}/*'
+            Action: "s3:GetObject"
+            Resource: !Sub "${EncryptedBucket.Arn}/*"
           - Effect: Allow
-            Action: 's3:PutObject'
-            Resource: !Sub '${DecryptedBucket.Arn}/*'
+            Action: "s3:PutObject"
+            Resource: !Sub "${DecryptedBucket.Arn}/*"
           - Effect: Allow
-            Action: 'dynamodb:GetItem'
+            Action: "dynamodb:GetItem"
             Resource: !GetAtt CipherTable.Arn
 
   DecryptorFunctionRole:
@@ -122,16 +121,12 @@ Resources:
               Service:
                 - lambda.amazonaws.com
             Action:
-              - 'sts:AssumeRole'
+              - "sts:AssumeRole"
 
   EncryptedBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref EncryptedBucketName
-      # NotificationConfiguration:
-      #   LambdaConfigurations:
-      #     - Event: s3:ObjectCreated:Put
-      #       Function: !GetAtt DecryptorFunction.Arn
 
   S3InvokeDecryptorFunctionPermission:
     Type: AWS::Lambda::Permission

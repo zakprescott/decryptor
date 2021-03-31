@@ -1,38 +1,38 @@
 {
-    "Records": [
-        {
-            "eventVersion": "2.1",
-            "eventSource": "aws:s3",
-            "awsRegion": "us-east-1",
-            "eventTime": "2021-02-21T16:10:03.599Z",
-            "eventName": "ObjectCreated:Put",
-            "userIdentity": {
-                "principalId": "AWS:AIDAZLJUTIGCBGRPRBPSL"
-            },
-            "requestParameters": {
-                "sourceIPAddress": "108.183.15.43"
-            },
-            "responseElements": {
-                "x-amz-request-id": "364AB15EBC96B32A",
-                "x-amz-id-2": "0xUF1L/Nw1QddtXK4cIeWykcNjpMsOK9fIt2HX6u7L2eV1RMTu6laFpEpel0U6QcAeLXC7WwrbD7dyXswcIpGPFIquG1DY6s"
-            },
-            "s3": {
-                "s3SchemaVersion": "1.0",
-                "configurationId": "EncryptedFileEvent",
-                "bucket": {
-                    "name": "decryptor-encrypted-files",
-                    "ownerIdentity": {
-                        "principalId": "A37HK2540OE6AO"
-                    },
-                    "arn": "arn:aws:s3:::decryptor-encrypted-files"
-                },
-                "object": {
-                    "key": "hello-world.txt",
-                    "size": 13,
-                    "eTag": "40e75f22d6b604ade33594113555ee5b",
-                    "sequencer": "00603285DDC1DABB19"
-                }
-            }
+  "Records": [
+    {
+      "eventVersion": "2.1",
+      "eventSource": "aws:s3",
+      "awsRegion": "us-east-1",
+      "eventTime": "2021-02-21T16:10:03.599Z",
+      "eventName": "ObjectCreated:Put",
+      "userIdentity": {
+        "principalId": "AWS:AIDAZLJUTIGCBGRPRBPSL"
+      },
+      "requestParameters": {
+        "sourceIPAddress": "108.183.15.43"
+      },
+      "responseElements": {
+        "x-amz-request-id": "364AB15EBC96B32A",
+        "x-amz-id-2": "0xUF1L/Nw1QddtXK4cIeWykcNjpMsOK9fIt2HX6u7L2eV1RMTu6laFpEpel0U6QcAeLXC7WwrbD7dyXswcIpGPFIquG1DY6s"
+      },
+      "s3": {
+        "s3SchemaVersion": "1.0",
+        "configurationId": "EncryptedFileEvent",
+        "bucket": {
+          "name": "decryptor-encrypted-files",
+          "ownerIdentity": {
+            "principalId": "A37HK2540OE6AO"
+          },
+          "arn": "arn:aws:s3:::decryptor-encrypted-files"
+        },
+        "object": {
+          "key": "hello-world.txt",
+          "size": 13,
+          "eTag": "40e75f22d6b604ade33594113555ee5b",
+          "sequencer": "00603285DDC1DABB19"
         }
-    ]
+      }
+    }
+  ]
 }
