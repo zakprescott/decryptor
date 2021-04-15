@@ -1,25 +1,40 @@
-const { getBucketName, getObjectKey } = require("./helpers.js");
-const { getObject, putObject } = require("./utils/s3.js");
-const decrypt = require("./decrypt.js");
-const { DECRYPTED_BUCKET } = require("./config.js");
+const { getBucketName, getObjectKey } = require('./helpers/s3EventHelpers.js');
+const { getObject, putObject } = require('./utils/s3.js');
+const decrypt = require('./decrypt.js');
+const { DECRYPTED_BUCKET } = require('./config.js');
 
-exports.handler = (event) => {
-  console.log(`Event: ${JSON.stringify(event)}`);
+const handler = (s3Event) => {
+	const { Records } = s3Event;
+	Records.forEach(async (s3EventRecord) => {
+		await putDecryptedDataToS3(s3EventRecord);
+	});
+};
 
-  const { Records } = event;
+const putDecryptedDataToS3 = async (s3EventRecord) => {
+	const { encryptedData, Key } = await getEncryptedDataWithKey(s3EventRecord);
+	const decryptedData = await decrypt(encryptedData);
+	await putObject(decryptedData, DECRYPTED_BUCKET, Key);
+};
 
-  Records.forEach(async (record) => {
-    console.log(`Processing record: ${JSON.stringify(record)}`);
-    const encryptedBucket = getBucketName(record);
-    const Key = getObjectKey(record);
+const getEncryptedDataWithKey = async (s3EventRecord) => {
+	const { Bucket, Key } = getBucketAndKey(s3EventRecord);
+	const encryptedData = await getObject(Bucket, Key);
+	return {
+		encryptedData: JSON.parse(encryptedData),
+		Key,
+	};
+};
 
-    console.log(`Decrypting data from: ${encryptedBucket}/${Key}`);
-    const encryptedData = await getObject(encryptedBucket, Key);
-    console.log(`Encrypted data: ${encryptedData}`);
+const getBucketAndKey = (s3EventRecord) => {
+	return {
+		Bucket: getBucketName(s3EventRecord),
+		Key: getObjectKey(s3EventRecord),
+	};
+};
 
-    const decryptedData = await decrypt(JSON.parse(encryptedData));
-    console.log(`Decrypted data: ${decryptedData}`);
-
-    await putObject(decryptedData, DECRYPTED_BUCKET, Key);
-  });
+module.export = {
+	handler,
+	putDecryptedDataToS3,
+	getEncryptedDataWithKey,
+	getBucketAndKey
 };
